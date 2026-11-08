@@ -7,6 +7,9 @@ src, dst = sys.argv[1], sys.argv[2]
 shutil.rmtree(dst, ignore_errors=True)
 # The artifact host reserves top-level names starting with "_", so assets move to next/.
 shutil.copytree(os.path.join(src, "_next"), os.path.join(dst, "next"))
+# Images from public/img keep their folder; pages and client code point at it relatively.
+if os.path.isdir(os.path.join(src, "img")):
+    shutil.copytree(os.path.join(src, "img"), os.path.join(dst, "img"))
 
 pages = {}
 for root, _, files in os.walk(src):
@@ -27,6 +30,8 @@ def links(s, escaped_too=True):
     # Longest paths first so a nested path is not caught by a shorter one.
     for path, flat in sorted(pages.items(), key=lambda kv: -len(kv[0])):
         s = s.replace(f'href="{path}"', f'href="{flat}"').replace(f'\\"href\\":\\"{path}\\"', f'\\"href\\":\\"{flat}\\"')
+        # Links to a section of another page (/services/#tax) keep their hash.
+        s = s.replace(f'href="{path}#', f'href="{flat}#').replace(f'\\"href\\":\\"{path}#', f'\\"href\\":\\"{flat}#')
         # Page frames on the canvas: the iframe markup and the props that render it.
         s = s.replace(f'src="{path}"', f'src="{flat}"').replace(f'\\"src\\":\\"{path}\\"', f'\\"src\\":\\"{flat}\\"')
         if path != "/" and escaped_too:
@@ -35,7 +40,7 @@ def links(s, escaped_too=True):
 
 for path, flat in pages.items():
     html = open(os.path.join(src, path.strip("/"), "index.html")).read()
-    html = html.replace('"/_next/', '"next/').replace('\\"/_next/', '\\"next/').replace('href="/favicon.ico"', 'href="favicon.ico"').replace('\\"/favicon.ico', '\\"favicon.ico')
+    html = html.replace('"/_next/', '"next/').replace('\\"/_next/', '\\"next/').replace('href="/favicon.ico"', 'href="favicon.ico"').replace('"/img/', '"img/').replace('\\"/img/', '\\"img/').replace('\\"/favicon.ico', '\\"favicon.ico')
     html = links(html).replace("<head>", "<head>" + router, 1)
     open(os.path.join(dst, flat), "w").write(html)
 shutil.copy(os.path.join(src, "favicon.ico"), dst)
@@ -49,7 +54,7 @@ for root, _, files in os.walk(os.path.join(dst, "next")):
         elif f.endswith(".js"):
             # Literal U+FFFD in string literals (polyfills) becomes the equivalent escape; the host rejects the raw char.
             # Site links inside the JS stay as they are; the click handler maps them.
-            t = open(p).read().replace('"/_next/"', '"next/"').replace("\ufffd", "\\uFFFD")
+            t = open(p).read().replace('"/_next/"', '"next/"').replace('"/img/', '"img/').replace("\ufffd", "\\uFFFD")
             open(p, "w").write(t)
 
 # Entry page: opens the canvas when the build includes it, else the home page (relative to wherever this is hosted).
