@@ -31,7 +31,7 @@ export function Footer() {
               <p>{site.hours}</p>
             </div>
             <div className={s.footCol}>
-              <a className={s.btnOutline} href={bookCall.href}>{bookCall.label}<img src="/img/icon-arrow-right.svg" alt="" width={14} height={14} /></a>
+              <a className={`${s.btn} ${s.btnPrimary}`} href={bookCall.href}>{bookCall.label}</a>
             </div>
           </div>
           <div className={s.footBottom}>
