@@ -3,8 +3,8 @@ import { Geist_Mono, Inter } from "next/font/google";
 import "@/components/arc/foundation.css";
 import "./globals.css";
 
-// Inter (variable) is the main face; a mono face carries Titan-style labels, buttons and figures.
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+// Inter with its optical-size axis, so large headings take the Display cut the Figma file uses; Geist Mono carries figures and labels.
+const inter = Inter({ subsets: ["latin"], axes: ["opsz"], variable: "--font-inter", display: "swap" });
 const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {

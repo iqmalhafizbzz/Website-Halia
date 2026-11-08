@@ -10,8 +10,9 @@
 .labelContent { display: inline-flex; flex: none; align-items: center; }
 .labelPhase { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); white-space: nowrap; }
 .labelPhase svg { flex: none; }
-.primary { color: var(--background); background: var(--foreground); border-color: var(--foreground); }
-.secondary { color: var(--foreground); background: var(--surface); border-color: var(--border); }
+/* Tactile: the primary takes a 1px ring in the surface colour; the secondary is white with the button ring and drop, no border. */
+.primary { color: var(--background); background: var(--foreground); border-color: transparent; box-shadow: var(--btn-primary-shadow, none); }
+.secondary { color: var(--foreground); background: var(--surface); border-color: transparent; box-shadow: var(--btn-shadow, 0 0 0 1px var(--border)); }
 .ghost { color: var(--text-secondary); background: transparent; border-color: transparent; }
 .danger { color: var(--danger); background: var(--surface); border-color: var(--border); }
 /* A disabled outlined button keeps its shape and fades only its label, so it still reads as a button that is off, not as plain text. */
@@ -19,8 +20,8 @@
 .danger:disabled { color: color-mix(in oklab, var(--danger) 55%, var(--surface-muted)); }
 .ghost:disabled { opacity: 1; color: var(--text-muted); }
 @media (hover: hover) and (pointer: fine) {
-  .primary:hover:not(:disabled) { opacity: .91; box-shadow: var(--shadow-resting); }
-  .secondary:hover:not(:disabled) { background: var(--surface-muted); box-shadow: var(--shadow-resting); }
+  .primary:hover:not(:disabled) { background: color-mix(in srgb, var(--foreground) 93%, var(--background)); }
+  .secondary:hover:not(:disabled) { background: var(--surface-muted); }
   .ghost:hover:not(:disabled) { color: var(--foreground); background: var(--surface-muted); }
   .danger:hover:not(:disabled) { border-color: var(--danger); background: var(--surface-muted); }
 }

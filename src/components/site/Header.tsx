@@ -1,58 +1,78 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import { bookCall, nav, site } from "@/content/site";
+import { Menu } from "lucide-react";
+import { bookCall, nav, site, whatsapp } from "@/content/site";
+import { Sheet } from "./Sheet";
+import { useCurrentPage } from "./useCurrentPage";
 import s from "./site.module.css";
 
 const links = nav.filter(item => item.value !== "home");
 
-// Matches on the page slug, so it works whatever path the site is served from.
-function currentSection(pathname: string) {
-  return links.find(item => pathname.includes(item.href.replaceAll("/", "")))?.value;
+/** Whatever sits under the middle of the bar decides its tone: anything marked data-tone="dark" turns the type white. */
+function useToneUnderBar(bar: React.RefObject<HTMLElement | null>) {
+  const [tone, setTone] = useState<"light" | "dark">("light");
+  useEffect(() => {
+    let frame = 0;
+    const read = () => {
+      frame = 0;
+      const header = bar.current;
+      if (!header) return;
+      const y = header.offsetHeight / 2;
+      const under = document.elementsFromPoint(window.innerWidth / 2, y).find(element => !header.contains(element));
+      setTone(under?.closest("[data-tone='dark']") ? "dark" : "light");
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(read); };
+    read();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => { cancelAnimationFrame(frame); window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); };
+  }, [bar]);
+  return tone;
 }
 
 export function Header() {
-  const current = currentSection(usePathname());
+  const current = useCurrentPage();
   const [open, setOpen] = useState(false);
+  const bar = useRef<HTMLElement>(null);
+  const tone = useToneUnderBar(bar);
+  const close = useCallback(() => setOpen(false), []);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
-
-  const items = links.map(item => (
-    <li key={item.value}>
-      <a className={s.navLink} href={item.href} aria-current={item.value === current ? "page" : undefined}>{item.label}</a>
-    </li>
-  ));
+  const linkProps = (item: (typeof links)[number]) => ({ href: item.href, "aria-current": item.value === current ? ("page" as const) : undefined });
 
   return (
-    <header className={s.header}>
-      <div className={s.bar}>
-        <Link className={s.brand} href="/" prefetch={false}><span className={s.mark} aria-hidden="true" />{site.name}</Link>
-        <nav aria-label="Main"><ul className={s.navPill}>{items}</ul></nav>
-        <div className={s.headerEnd}>
-          <a className={s.textLink} href={site.whatsappHref}>WhatsApp us</a>
-          <a className={`${s.btnSoft} ${s.btnSm}`} href={bookCall.href}>{bookCall.label}</a>
+    <header ref={bar} className={s.header} data-tone={tone}>
+      <div className={s.topbar}>
+        <div className={s.lead}>
+          <Link className={s.brand} href="/" prefetch={false} aria-label={`${site.name} home`}>
+            <img src="/img/logo.svg" alt="" width={18} height={27} />{site.wordmark}
+          </Link>
+          <nav aria-label="Main">
+            <ul className={s.navLinks}>
+              {links.map(item => <li key={item.value}><a className={s.navLink} {...linkProps(item)}>{item.short}</a></li>)}
+            </ul>
+          </nav>
         </div>
-        <button type="button" className={s.menuButton} aria-expanded={open} aria-controls="site-menu" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(value => !value)}>
-          {open ? <X size={20} strokeWidth={1.75} aria-hidden="true" /> : <Menu size={20} strokeWidth={1.75} aria-hidden="true" />}
+        <div className={s.actions}>
+          <a className={s.btn} href={whatsapp.href}>{whatsapp.label}</a>
+          <a className={`${s.btn} ${s.btnPrimary}`} href={bookCall.href}>{bookCall.label}</a>
+        </div>
+        <button type="button" className={s.menuButton} aria-expanded={open} aria-haspopup="dialog" aria-label="Open menu" onClick={() => setOpen(true)}>
+          <Menu size={18} strokeWidth={2} aria-hidden="true" />
         </button>
       </div>
-      {open && (
-        <nav id="site-menu" className={s.menu} aria-label="Main">
-          <ul className={s.menuList}>{items}</ul>
-          <div className={s.menuActions}>
-            <a className={s.btnSoft} href={site.whatsappHref}>WhatsApp us</a>
-            <a className={s.btn} href={bookCall.href}>{bookCall.label}</a>
-          </div>
+      <Sheet open={open} onClose={close} label="Main menu">
+        <nav aria-label="Main">
+          <ul className={s.sheetLinks}>
+            {nav.map(item => <li key={item.value}><a {...linkProps(item)}>{item.label}</a></li>)}
+          </ul>
         </nav>
-      )}
+        <div className={s.sheetActions}>
+          <a className={`${s.btn} ${s.btnPrimary}`} href={bookCall.href}>{bookCall.label}</a>
+          <a className={s.btn} href={whatsapp.href}>{whatsapp.label}</a>
+        </div>
+      </Sheet>
     </header>
   );
 }

@@ -1,17 +1,15 @@
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { site } from "@/content/site";
-import s from "@/components/site/site.module.css";
+import { Reveal } from "@/components/site/Reveal";
 
+// The topbar is fixed; pages start with a page head that clears it, or the home hero that runs under it.
 export default function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <p className={s.demo}>{site.demoBanner}</p>
-      <div className={s.frame}>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
-      </div>
+      <Header />
+      <main id="main">{children}</main>
+      <Footer />
+      <Reveal />
     </>
   );
 }

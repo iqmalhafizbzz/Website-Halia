@@ -1,63 +1,133 @@
-/* Halia & Co. design tokens, after Titan (titan.com, via Mobbin): a white page held in a framed
-   column with hairline sides, warm grey cards, near-black ink, mono uppercase labels and buttons.
-   Type spec from the brief owner: hero 42px Semibold, section headings 30px Semibold, body 16px Medium.
-   Ink is Halia's deep green-black; ginger only marks the logo and the small "Free" badge.
-   The Arc semantic tokens are mapped here too, so Arc's accordion, counter and form fields match. */
+/* Halia & Co. tokens, from the Fiskal Figma file (Page/Home, Services, About, Fees, Contact).
+   Figma values bound to a variable keep it (slate-300 lines, slate-700 lead text, slate-900 panel, zinc-800 button text).
+   Unbound values are snapped to the nearest Tailwind v4 value: colours to the palette, sizes to the 4px spacing grid,
+   radii to the radius ladder, line heights to leading-*, letter spacing to tracking-*. The source value is in each comment.
+   Tactile tokens (ring, drop, press) follow .claude/skills/tactile-design; every surface keeps them as variables so
+   the /compare/ page can swap in the Figma originals for its "before" column. */
 
 :root {
-  --bg: oklch(100% 0 0);
-  --ink: oklch(20% .022 165);
-  --ink-soft: oklch(56% .012 165);
-  --muted: oklch(48% .012 165);
-  --line: oklch(92% .004 90);
-  --card: oklch(95.8% .006 80);
-  --card-strong: oklch(93.2% .008 80);
-  --placeholder: oklch(90.5% .003 90);
-  --placeholder-ink: oklch(52% .006 90);
-  --dark: oklch(19% .018 165);
-  --dark-ink: oklch(97% .004 90);
-  --dark-muted: oklch(72% .008 165);
-  --dark-line: oklch(30% .015 165);
-  --ginger: oklch(72% .15 58);
+  /* Palette (Tailwind v4). */
+  --white: #fff;
+  --black: #000;
+  --ink: #09090b;          /* zinc-950, from #0c1914 */
+  --muted: #52525c;        /* zinc-600, from #58605c */
+  --lead: #314158;         /* slate-700 (bound) */
+  --line: #cad5e2;         /* slate-300 (bound): frame and section lines */
+  --rule: #e7e5e4;         /* stone-200, from #e5e4e2: rules inside a section */
+  --field-line: #d6d3d1;   /* stone-300, from #c5c4c0 */
+  --panel: #f5f5f4;        /* stone-100, from #f3f1ed: form card */
+  --tile: #dff2fe;         /* sky-100, from #dbf1ff: icon tiles */
+  --tint: rgb(0 166 244 / .5); /* sky-500 at 50%, from rgba(37,156,229,.5): photo overlay */
+  --navy: #0f172b;         /* slate-900 (bound): recommended plan */
+  --on-dark: #f8fafc;      /* slate-50 (bound) */
+  --on-dark-muted: #cad5e2;
+  --foot-ink: #f5f5f4;     /* stone-100, from #f6f5f2 */
+  --foot-muted: #9f9fa9;   /* zinc-400, from #a0a6a3 */
+  --foot-line: #27272a;    /* zinc-800, from #27302c */
+  --button-ink: #27272a;   /* zinc-800 (bound) */
+  --accent: #f54900;       /* orange-600, from #f66500 */
+  --accent-hover: #ca3500; /* orange-700 */
+  --accent-ink: #fafafa;   /* neutral-50 (bound) */
+  --mark: #ff8904;         /* orange-400, from #e98a35 */
 
+  /* Type: four sizes per face. Anything else in Figma binds to the nearest of the four. */
   --font-sans: var(--font-inter), "Inter Variable", system-ui, sans-serif;
   --font-code: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --text-display: 2.25rem;   /* text-4xl 36, from 42 */
+  --text-section: 1.875rem;  /* text-3xl 30 */
+  --text-title: 1.25rem;     /* text-xl 20; 18 and 24 bind here */
+  --text-body: 1rem;         /* text-base 16; 12, 14 and 15 bind here */
+  --mono-figure: 3rem;       /* text-5xl 48 */
+  --mono-index: 1.5rem;      /* text-2xl 24 */
+  --mono-step: 1rem;         /* text-base 16 */
+  --mono-label: .75rem;      /* text-xs 12; 14 binds here */
+  --leading-tight: 1.2;      /* Figma 1.2 headings */
+  --leading-title: 1.75rem;  /* leading-7 28, from 26 */
+  --leading-body: 1.5rem;    /* leading-6 24, from 24.8 and 21 */
+  --tracking-tight: -.025em; /* tracking-tight, from -1px on 30 and -0.3px on 20 */
+  --tracking-wider: .05em;   /* tracking-wider, from .84px on 14 and .72px on 12 */
 
-  --size-hero: 2.625rem;     /* 42px */
-  --size-section: 1.875rem;  /* 30px */
-  --size-title: 1.25rem;     /* 20px card and row titles */
-  --size-body: 1rem;         /* 16px */
-  --size-small: .875rem;     /* 14px */
-  --size-label: .75rem;      /* 12px mono labels */
+  /* Layout (Tailwind spacing, 4px grid). */
+  --column: 1200px;          /* max-w-300 */
+  --topbar-h: 52px;          /* h-13 */
+  --gutter: 24px;            /* px-6 */
+  --section-y: 64px;         /* py-16: one rhythm for every section */
+  --head-gap: 48px;          /* gap-12: section title to content */
+  --radius-control: 8px;     /* rounded-lg, from 10 */
+  --radius-card: 12px;       /* rounded-xl */
+  --radius-panel: 16px;      /* rounded-2xl */
 
-  --frame: 1256px;
-  --pad: 32px;
-  --section-y: 96px;
-  --radius-card: 16px;
+  /* Tactile: fill, edge and drop from the surface beneath; crisp, never a soft blur. */
+  --shadow-ink: 9 9 11;
+  --ring: 0 0 0 1px rgb(var(--shadow-ink) / .08);
+  --drop: 0 1px 2px 0 rgb(var(--shadow-ink) / .12);
+  --shadow-button: var(--ring), var(--drop);
+  --shadow-primary: 0 0 0 1px rgb(var(--shadow-ink) / .06), var(--drop);
+  --shadow-card: 0 0 0 1px rgb(var(--shadow-ink) / .07), var(--drop), 0 3px 4px -2px rgb(var(--shadow-ink) / .12);
+  --shadow-menu: var(--ring), var(--drop), 0 4px 8px -4px rgb(var(--shadow-ink) / .16);
+  --shadow-sheet: var(--ring), var(--drop), 0 6px 8px -4px rgb(var(--shadow-ink) / .16);
+  --shadow-table: 0 0 0 1px rgb(var(--shadow-ink) / .07), var(--drop);
+  --shadow-dark: 0 0 0 .5px rgb(255 255 255 / .14), 0 1px 2px 0 rgb(0 0 0 / .5);
+  --focus-ring: #71717b;     /* zinc-500: 3:1 on white, wells and black */
+  --press: .97;              /* buttons and pills */
+  --press-card: .99;
+  --press-icon: .94;
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+  --dur-hover: 150ms;
+  --dur-press: 150ms;
 
-  /* Arc components follow the same palette. */
-  --background: var(--bg);
-  --surface: var(--bg);
-  --surface-muted: var(--card);
+  /* Component knobs, swapped by /compare/ to show the Figma originals. */
+  --btn-shadow: var(--shadow-button);
+  --btn-primary-shadow: var(--shadow-primary);
+  --btn-press: var(--press);
+  --card-shadow: var(--shadow-card);
+  --card-press: var(--press-card);
+  --card-lift: -2px;
+  --table-shadow: var(--shadow-table);
+  --table-line: .5px solid var(--line);
+  --table-radius: var(--radius-card);
+  --select-border: 0;
+  --select-shadow: var(--shadow-button);
+  --menu-border: 0;
+  --menu-shadow: var(--shadow-menu);
+  --menu-tick: none;
+  --menu-chosen: var(--rule);
+  --pill-bg: var(--white);
+  --pill-shadow: var(--shadow-button);
+  --pill-press: var(--press-icon);
+
+  /* Arc components follow the same tokens. */
+  --background: var(--white);
+  --surface: var(--white);
+  --surface-raised: var(--white);
+  --surface-muted: var(--panel);
   --foreground: var(--ink);
   --text-secondary: var(--muted);
   --text-muted: var(--muted);
-  --border: var(--line);
-  --border-subtle: var(--line);
-  --border-strong: oklch(82% .006 90);
-  --accent: var(--ink);
-  --accent-strong: var(--ink);
-  --accent-subtle: oklch(20% .022 165 / .07);
+  --border: var(--rule);
+  --border-subtle: var(--rule);
+  --border-strong: var(--field-line);
   --control-on: var(--ink);
-  --font-display: var(--font-code);
+  --font-display: var(--font-sans);
   --font-body: var(--font-sans);
-  --radius-control: 12px;
-  --radius-panel: 14px;
+  --text-xs: var(--text-body);
+  --text-sm: var(--text-body);
+  --text-base: var(--text-body);
+  --text-lg: var(--text-title);
+  --text-xl: var(--text-title);
+  --control-height-md: 44px; /* h-11 */
+  --control-height-lg: 48px; /* h-12, from 50 */
   --radius-surface: var(--radius-card);
 }
 
 @media (max-width: 640px) {
-  :root { --pad: 16px; --section-y: 64px; }
+  :root {
+    --gutter: 20px;          /* px-5 */
+    --section-y: 48px;       /* py-12 */
+    --head-gap: 32px;        /* gap-8 */
+    --text-display: 1.875rem; /* reuses text-3xl */
+    --text-section: 1.25rem;  /* reuses text-xl */
+  }
 }
 
 *,
@@ -68,19 +138,18 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: 96px;
+  scroll-padding-top: calc(var(--topbar-h) + 24px);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg);
+  background: var(--white);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: var(--size-body);
+  font-size: var(--text-body);
   font-weight: 500;
-  letter-spacing: -.011em;
-  line-height: 1.5;
+  line-height: var(--leading-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
@@ -104,6 +173,11 @@ a {
   color: inherit;
 }
 
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .srOnly {
   position: absolute;
   width: 1px;
@@ -111,4 +185,12 @@ a {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* Section reveal (components/site/Reveal.tsx): a gentle fade and 12px rise, only once script is ready. */
+[data-reveal] { transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }
+html[data-reveal-ready] [data-reveal]:not([data-shown]) { opacity: 0; transform: translateY(12px); }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { transition: opacity 200ms linear; }
+  html[data-reveal-ready] [data-reveal]:not([data-shown]) { transform: none; }
 }

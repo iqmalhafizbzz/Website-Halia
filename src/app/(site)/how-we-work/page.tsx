@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { Accordion } from "@/components/arc/accordion/accordion";
-import { bookCall, fees } from "@/content/site";
+import { fees } from "@/content/site";
+import { PageHead, SectionHead } from "@/components/site/blocks";
 import s from "@/components/site/site.module.css";
 
 export const metadata: Metadata = { title: "How we work & fees", description: fees.hero.text };
@@ -9,80 +10,64 @@ export const metadata: Metadata = { title: "How we work & fees", description: fe
 export default function FeesPage() {
   return (
     <>
-      <section className={s.pageHead} aria-labelledby="page-title">
-        <h1 id="page-title" className={s.hero}>{fees.hero.title}</h1>
-        <p className={s.body}>{fees.hero.text}</p>
-      </section>
+      <PageHead title={fees.hero.title} text={fees.hero.text} />
 
-      <section className={s.section} aria-labelledby="process-title">
-        <div className={s.narrow}>
-          <div className={s.sectionHead}><h2 id="process-title" className={s.section2}>{fees.process.title}</h2></div>
-          <Accordion
-            size="lg"
-            defaultOpen={0}
-            items={fees.process.steps.map((step, index) => ({
-              title: `Step ${index + 1}) ${step.title}${step.meta ? ` (${step.meta})` : ""}`,
-              content: step.text,
-            }))}
-          />
+      <section className={s.band} aria-labelledby="process-title">
+        <div className={s.col}>
+          <SectionHead id="process-title" title={fees.process.title} />
+          <div className={s.narrow}>
+            <Accordion size="lg" defaultOpen={0} items={fees.process.steps.map(step => ({ title: step.title, content: step.text }))} />
+          </div>
         </div>
       </section>
 
-      <section className={s.section} aria-labelledby="fees-title">
-        <div className={s.sectionHead}><h2 id="fees-title" className={s.section2}>{fees.plans.title}</h2></div>
-        <ul className={`${s.cards} ${s.cards3}`}>
-          {fees.plans.items.map(plan => (
-            <li key={plan.name} className={s.plan}>
-              <h3 className={s.planName}>{plan.name}</h3>
-              <div className={s.planRow}>
-                <span className={s.priceBlock}>
-                  {plan.prefix && <span className={s.label}>{plan.prefix}</span>}
-                  <span className={s.price}>{plan.price}</span>
-                </span>
-                <span className={s.label}>{plan.unit}</span>
-              </div>
-              <div className={s.planRow}>
-                <span className={s.body}>{plan.for}</span>
-              </div>
-              <ul className={s.checks} aria-label={`${plan.name} includes`}>
-                {plan.includes.map(entry => <li key={entry} className={s.check}><Check size={14} strokeWidth={1.75} aria-hidden="true" />{entry}</li>)}
-              </ul>
-            </li>
-          ))}
-        </ul>
+      <section aria-labelledby="pricing-title">
+        <div className={s.col}>
+          <SectionHead id="pricing-title" title={fees.plans.title} />
+          <div className={s.tableWrap}>
+            <ul className={s.table}>
+              {fees.plans.items.map(plan => (
+                <li key={plan.name} className={plan.badge ? `${s.plan} ${s.planFeatured}` : s.plan}>
+                  <div className={s.planHead}>
+                    <h3 className={`${s.title} ${s.planName}`}>{plan.name}{plan.badge && <span className={s.badge}>{plan.badge}</span>}</h3>
+                    <p className={s.body}>{plan.for}</p>
+                  </div>
+                  <p className={s.price}>
+                    {plan.prefix && <span className={s.monoLabel}>{plan.prefix}</span>}
+                    <span className={s.figure}>{plan.price}</span>
+                    <span className={s.unit}>{plan.unit}</span>
+                  </p>
+                  <ul className={s.checks} aria-label={`${plan.name} includes`}>
+                    {plan.includes.map(entry => <li key={entry}><Check size={16} strokeWidth={2} aria-hidden="true" />{entry}</li>)}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </section>
 
-      <section className={s.section} aria-labelledby="included-title">
-        <div className={s.twoCol}>
-          <div className={s.colLeft}>
-            <h2 id="included-title" className={s.section2}>{fees.included.title}</h2>
-            <p className={`${s.body} ${s.muted}`}>{fees.included.note}</p>
-          </div>
-          <ul className={`${s.colRight} ${s.rows}`}>
-            {fees.included.items.map(item => (
-              <li key={item} className={`${s.row} ${s.rowSimple}`}>
-                <Check size={16} strokeWidth={1.75} aria-hidden="true" />
+      <section className={s.band} aria-labelledby="included-title">
+        <div className={s.col}>
+          <SectionHead id="included-title" title={fees.included.title} />
+          <ol className={`${s.cells} ${s.cells4}`}>
+            {fees.included.items.map((item, index) => (
+              <li key={item} className={`${s.cell} ${s.cellTight}`}>
+                <span className={s.monoLabel}>0{index + 1}</span>
                 <p className={s.title}>{item}</p>
               </li>
             ))}
-          </ul>
+          </ol>
+          <p className={s.note}>{fees.included.note}</p>
         </div>
       </section>
 
-      <section className={s.section} aria-labelledby="faq-title">
-        <div className={s.narrow}>
-          <div className={s.sectionHead}><h2 id="faq-title" className={s.section2}>{fees.faq.title}</h2></div>
-          <Accordion size="lg" defaultOpen={-1} items={fees.faq.items.map(item => ({ title: item.question, content: item.answer }))} />
-        </div>
-      </section>
-
-      <section className={s.section} aria-labelledby="cta-title">
-        <div className={s.dark}>
-          <div className={s.darkCopy}>
-            <h2 id="cta-title" className={s.section2}>{fees.cta.title}</h2>
-            <p className={s.body}>{fees.cta.text}</p>
+      <section className={s.band} aria-labelledby="faq-title">
+        <div className={s.col}>
+          <SectionHead id="faq-title" title={fees.faq.title} />
+          <div className={s.narrow}>
+            <Accordion size="lg" defaultOpen={-1} items={fees.faq.items.map(item => ({ title: item.question, content: item.answer }))} />
           </div>
-          <a className={s.btnLight} href={bookCall.href}>{bookCall.label}<ArrowRight size={14} strokeWidth={1.75} aria-hidden="true" /></a>
         </div>
       </section>
     </>

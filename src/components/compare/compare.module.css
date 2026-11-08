@@ -1,0 +1,56 @@
+/* Before/after board. Both columns render the real site components; the "before" column swaps the
+   Tactile knobs from globals.css back to the Figma originals, so the only difference is the treatment. */
+
+.page { max-width: 1200px; margin: 0 auto; padding: 48px 24px 96px; }
+.intro { display: grid; gap: 8px; margin-bottom: 48px; }
+.intro p { max-width: 70ch; color: var(--muted); }
+.part { display: grid; gap: 16px; border-top: 1px solid var(--line); padding: 40px 0; }
+.partHead { display: grid; gap: 4px; }
+.partHead p { max-width: 80ch; color: var(--muted); }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.side { display: grid; align-content: start; gap: 12px; min-width: 0; }
+.tag { justify-self: start; border-radius: 999px; padding: 2px 10px; background: var(--white); box-shadow: var(--shadow-button); font-family: var(--font-code); font-size: var(--mono-label); letter-spacing: var(--tracking-wider); text-transform: uppercase; }
+.stage { display: grid; min-height: 160px; place-items: center; gap: 16px; overflow: hidden; border-radius: 16px; padding: 32px 24px; background: var(--white); outline: 1px solid var(--rule); }
+.stagePhoto { position: relative; isolation: isolate; }
+.stagePhoto > img { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; }
+.stageDark { background: var(--black); outline: 0; }
+.stagePanel { background: var(--panel); outline: 0; }
+.row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.notes { margin: 0; padding-left: 18px; color: var(--muted); }
+.notes li + li { margin-top: 4px; }
+.wide { width: 100%; }
+.phone { position: relative; width: 320px; height: 480px; overflow: hidden; border-radius: 24px; background: var(--white); outline: 1px solid var(--line); }
+.phoneBar { display: flex; height: 52px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding: 0 12px 0 16px; font-weight: 600; }
+.phoneBody { display: grid; gap: 8px; padding: 16px; color: var(--muted); }
+.phoneBody span { height: 12px; border-radius: 6px; background: var(--panel); }
+.oldMenu { display: grid; padding: 4px 16px 16px; border-bottom: 1px solid var(--line); }
+.oldMenu a { display: flex; min-height: 44px; align-items: center; border-bottom: 1px solid var(--line); text-decoration: none; }
+.oldMenuActions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.oldMenuActions span { display: grid; height: 36px; place-items: center; border-radius: 999px; background: var(--panel); font-family: var(--font-code); font-size: var(--mono-label); text-transform: uppercase; }
+.oldToggle { width: 36px; height: 36px; border: 0; border-radius: 999px; background: var(--panel); cursor: pointer; }
+
+/* Figma originals for every Tactile knob. */
+.before {
+  --btn-shadow: 0 1px 2px 0 rgb(0 0 0 / .25), 0 4px 12px -4px rgb(0 0 0 / .4), inset 0 0 0 1px rgb(255 255 255 / .06), inset 0 1px 0 0 rgb(255 255 255 / .14);
+  --btn-primary-shadow: var(--btn-shadow);
+  --shadow-dark: var(--btn-shadow);
+  --btn-press: 1;
+  --press-icon: 1;
+  --card-shadow: none;
+  --card-press: 1;
+  --table-shadow: none;
+  --table-line: 1px solid var(--line);
+  --table-radius: 0;
+  --table-pad: 0;
+  --select-border: 1px solid var(--rule);
+  --select-shadow: none;
+  --menu-border: 1px solid var(--rule);
+  --menu-shadow: var(--shadow-floating);
+  --menu-tick: inline-flex;
+  --menu-chosen: transparent;
+  --pill-bg: transparent;
+  --pill-shadow: none;
+  --pill-press: 1;
+}
+
+@media (max-width: 860px) { .pair { grid-template-columns: minmax(0, 1fr); } }
