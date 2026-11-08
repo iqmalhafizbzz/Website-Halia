@@ -21,7 +21,7 @@ export default function FeesPage() {
         </div>
       </section>
 
-      <section aria-labelledby="pricing-title">
+      <section className={s.band} aria-labelledby="pricing-title">
         <div className={s.col}>
           <SectionHead id="pricing-title" title={fees.plans.title} />
           <div className={s.tableWrap}>

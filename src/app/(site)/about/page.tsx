@@ -10,7 +10,7 @@ export default function AboutPage() {
     <>
       <PageHead title={about.hero.title} text={about.hero.text} />
 
-      <section aria-labelledby="beliefs-title">
+      <section className={s.band} aria-labelledby="beliefs-title">
         <div className={s.col}>
           <SectionHead id="beliefs-title" title={about.beliefs.title} />
           <ol className={s.cells}>
@@ -41,7 +41,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section aria-labelledby="numbers-title">
+      <section className={s.band} aria-labelledby="numbers-title">
         <div className={s.col}>
           <SectionHead id="numbers-title" title={about.numbers.title} />
           <dl className={s.cells}>

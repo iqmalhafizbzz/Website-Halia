@@ -6,7 +6,11 @@ export default function HomePage() {
   return (
     <>
       <section className={s.heroBleed} data-tone="dark" aria-labelledby="page-title">
-        <div className={s.heroMedia} aria-hidden="true"><img src="/img/hero-clouds.png" alt="" /></div>
+        <div className={s.heroMedia} aria-hidden="true">
+          <div className={s.sky}>
+            <div className={s.cloudTrack}>{[0, 1, 2].map(index => <img key={index} src="/img/hero-clouds.png" alt="" />)}</div>
+          </div>
+        </div>
         <div className={s.heroCopy}>
           <h1 id="page-title" className={s.display}>{home.hero.title[0]}<br />{home.hero.title[1]}</h1>
           <p className={s.body}>{home.hero.text}</p>
@@ -21,7 +25,7 @@ export default function HomePage() {
         <div className={s.col}><Stats items={stats} /></div>
       </section>
 
-      <section aria-labelledby="plate-title">
+      <section className={s.band} aria-labelledby="plate-title">
         <div className={s.col}>
           <SectionHead id="plate-title" title={home.plate.title} />
           <ul className={s.tiles}>
@@ -38,7 +42,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="why-title">
+      <section className={s.band} aria-labelledby="why-title">
         <div className={s.col}>
           <SectionHead id="why-title" title={home.why.title} />
           <ul className={s.cells}>
@@ -55,7 +59,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="start-title">
+      <section className={s.band} aria-labelledby="start-title">
         <div className={s.col}>
           <SectionHead id="start-title" title={home.start.title} />
           <ol className={s.cells}>

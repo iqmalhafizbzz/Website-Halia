@@ -77,12 +77,21 @@
 /* Home: the photo runs under the fixed topbar. */
 .heroBleed { position: relative; display: grid; min-height: clamp(560px, 100svh, 788px); place-items: center; overflow: hidden; border-bottom: 1px solid var(--line); padding: calc(var(--topbar-h) + 48px) var(--gutter) 48px; color: var(--white); text-align: center; }
 .heroMedia { position: absolute; inset: 0; z-index: -1; }
-.heroMedia img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 60% 40%; animation: drift 48s ease-in-out infinite alternate; will-change: transform; }
 .heroMedia::after { content: ""; position: absolute; inset: 0; background: rgb(0 0 0 / .2); }
-/* A slow drift: the clouds creep across and the frame breathes in, one way and back over a minute and a half. */
-@keyframes drift {
-  from { transform: scale(1.04) translate3d(0, 0, 0); }
-  to { transform: scale(1.14) translate3d(-3%, -1.5%, 0); }
+/* Clouds on the wind: three copies of the photo overlap by 30%, each fading in over the one before, so no seam or
+   mirror shows. The strip slides left by one copy's step (70% of the frame) and loops onto an identical position.
+   Underneath, a slower swell lifts and grows the sky, the way cloud billows. */
+.sky { position: absolute; inset: -4%; animation: billow 36s ease-in-out infinite alternate; will-change: transform; }
+.cloudTrack { display: flex; width: 100%; height: 100%; animation: cloud-drift 90s linear infinite; will-change: transform; }
+.cloudTrack img { width: 100%; max-width: none; height: 100%; flex: none; object-fit: cover; -webkit-mask-image: linear-gradient(to right, transparent, #000 30%); mask-image: linear-gradient(to right, transparent, #000 30%); }
+.cloudTrack img + img { margin-left: -30%; }
+@keyframes cloud-drift {
+  from { transform: translate3d(-30%, 0, 0); }
+  to { transform: translate3d(-100%, 0, 0); }
+}
+@keyframes billow {
+  from { transform: scale(1) translate3d(0, 0, 0); }
+  to { transform: scale(1.05) translate3d(0, -1.5%, 0); }
 }
 .heroCopy { display: grid; max-width: 640px; justify-items: center; gap: 20px; }
 .heroCopy .body { max-width: 480px; color: #f1f5f9; } /* slate-100 (bound) */
@@ -261,7 +270,8 @@
 /* ---------- Motion preferences ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .heroMedia img { animation: none; transform: scale(1.04); }
+  .sky, .cloudTrack { animation: none; }
+  .cloudTrack { transform: translate3d(-30%, 0, 0); }
   .btn, .tile, .menuButton { transition: none; }
   .btn:active, .tile:active, .menuButton:active { transform: none; }
   .sheet, .sheet[data-closing] { animation-name: fade-in; }
